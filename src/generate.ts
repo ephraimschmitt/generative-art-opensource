@@ -1,201 +1,42 @@
-import fs from 'fs';
-import { createCanvas, Image, loadImage } from 'canvas';
-import {
-  width,
-  height,
-  description,
-  baseImageUri,
-  startEditionFrom,
-  endEditionAt,
-  rarityWeights,
-  Layer,
-  Size,
-  Position,
-  Element,
-  Rarity,
-} from './config';
-import console from 'console';
+import BN from 'bn.js';
+import { createDna } from './dnaUtils';
+import { createImageLayer, drawImage, saveImage } from './imageUtils';
 
-type ImageLayer = {
-  layer: DNALayer;
-  image: Image;
-};
-
-type Attribute = {
-  name: string;
-  rarity: string;
-};
-
-type DNALayer = {
-  position: Position;
-  size: Size;
-  selectedElement: Element;
-};
-
-type Metadata = {
-  dna: string;
-  name: string;
-  description: string;
-  image: string;
-  edition: number;
-  date: number;
-  attributes: Attribute[];
-};
-
-const canvas = createCanvas(width, height);
-const ctx = canvas.getContext('2d');
-
-const saveImage = (editionCount: number) => {
-  fs.writeFileSync(
-    `./output/${editionCount}.png`,
-    canvas.toBuffer('image/png')
-  );
-};
-
-const signImage = (sig: string) => {
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 30pt Courier';
-  ctx.textBaseline = 'top';
-  ctx.textAlign = 'left';
-  ctx.fillText(sig, 40, 40);
-};
-
-const genColor = () => {
-  let hue = Math.floor(Math.random() * 360);
-  let pastel = `hsl(${hue}, 100%, 85%)`;
-  return pastel;
-};
-
-const drawBackground = () => {
-  ctx.fillStyle = genColor();
-  ctx.fillRect(0, 0, width, height);
-};
-
-const addMetadata = (dna: number[], edition: number) => {
-  let dateTime = Date.now();
-  return {
-    dna: dna.join(''),
-    name: `#${edition}`,
-    description: description,
-    image: `${baseImageUri}/${edition}`,
-    edition: edition,
-    date: dateTime,
-    attributes: [],
-  } as Metadata;
-};
-
-const generateAttribute = (element: ImageLayer) => {
-  let selectedElement = element.layer.selectedElement;
-  return {
-    name: selectedElement.name,
-    // rarity: selectedElement.rarity, TODO: need to put this back in
-  } as Attribute;
-};
-
-const loadLayerImg = async (layer: DNALayer) => {
-  const image = await loadImage(`${layer.selectedElement.path}`);
-  return { layer, image: image } as ImageLayer;
-};
-
-const drawElement = (imageLayer: ImageLayer) => {
-  ctx.drawImage(
-    imageLayer.image,
-    imageLayer.layer.position.x,
-    imageLayer.layer.position.y,
-    imageLayer.layer.size.width,
-    imageLayer.layer.size.height
-  );
-};
-
-const constructLayerToDna = (
-  dna: number[],
-  layers: Layer[],
-  rarity: string
+const generate = async (
+  totalTokens: number,
+  imageBaseUrl: string
 ) => {
-  return layers.map(
-    (layer, index) =>
-      ({
-        position: layer.position,
-        size: layer.size,
-        selectedElement: layer.elements[rarity][dna[index]],
-      } as DNALayer)
-  );
-};
+  let allDna: BN[] = [];
+  let editionCount = 0;
+  const metadata: Metadata[] = [];
 
-const getRarity = (editionCount: number) => {
-  return (rarityWeights.find(
-    (rarityWeight) =>
-      editionCount >= rarityWeight.from && editionCount <= rarityWeight.to
-  )?.value ?? 'original') as Rarity;
-};
+  while (editionCount <= totalTokens) {
+    // get rarity and create dna
 
-const isDnaUnique = (_dnaList: number[][], _dna: number[]) => {
-  return !_dnaList.find((i) => i.join('') === _dna.join(''));
-};
+    const dnaResult = createDna(allDna);
+    allDna = [...dnaResult.allDna];
 
-const createDna = (layers: Layer[], rarity: string) => {
-  return layers.map((layer) =>
-    Math.floor(Math.random() * layer.elements[rarity].length)
-  );
-};
+    const layerPromises = dnaResult.pickedTraits.map((trait) =>
+      createImageLayer(trait.path)
+    );
 
-const startCreating = async (layers: Layer[]) => {
-  const totalMetadata: Metadata[] = [];
-  const dnaList: number[][] = [];
-  let editionCount = startEditionFrom;
-  while (editionCount <= endEditionAt) {
-    console.log(editionCount);
+    const images = await Promise.all(layerPromises);
 
-    const rarity: Rarity = getRarity(editionCount);
-    console.log(rarity);
+    // render layers to image
 
-    const newDna = createDna(layers, rarity);
-    console.log(dnaList);
+    images.forEach((image) => drawImage(image));
+    saveImage(editionCount);
 
-    if (isDnaUnique(dnaList, newDna)) {
-      const dnaLayers = constructLayerToDna(newDna, layers, rarity);
-      const imageLayersPromises: Promise<ImageLayer>[] = dnaLayers.map(
-        (layer) => loadLayerImg(layer)
-      );
+    // create attributes
+    const attributes: AttributeMeta[] = dnaResult.pickedTraits.map((trait) => {
+      return { trait_type: trait.gene, value: trait.name };
+    });
 
-      const imageLayers = await Promise.all(imageLayersPromises);
+    metadata.push({ image: `${imageBaseUrl}${editionCount}`, attributes });
 
-      ctx.clearRect(0, 0, width, height);
-      drawBackground();
-      const attributes = imageLayers.map((imageLayer) => {
-        drawElement(imageLayer);
-        return generateAttribute(imageLayer);
-      });
-      signImage(`#${editionCount}`);
-      saveImage(editionCount);
-
-      const metadata = addMetadata(newDna, editionCount);
-      metadata.attributes = attributes;
-      totalMetadata.push(metadata);
-      console.log(`Created edition: ${editionCount} with DNA: ${newDna}`);
-      dnaList.push(newDna);
-
-      editionCount++;
-    } else {
-      console.log('DNA exists!');
-    }
+    editionCount++;
   }
-  return totalMetadata;
+  return metadata;
 };
 
-export {
-  saveImage,
-  signImage,
-  genColor,
-  drawBackground,
-  loadLayerImg,
-  constructLayerToDna,
-  startCreating,
-  getRarity,
-  isDnaUnique,
-  createDna,
-  ImageLayer,
-  Attribute,
-  DNALayer,
-  Metadata,
-};
+export { generate };

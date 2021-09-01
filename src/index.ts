@@ -1,6 +1,19 @@
-import { startCreating } from './generate';
 import fs from 'fs';
-import { layers } from './config';
+import { generate } from './generate';
+
+export type Config = {
+  imageWidth: number;
+  imageHeight: number;
+  totalTokens: number;
+  imageBaseUrl: string;
+};
+
+export const CONFIG: Config = {
+  imageHeight: 500,
+  imageWidth: 500,
+  totalTokens: 5,
+  imageBaseUrl: 'https://tbd.io/',
+};
 
 (async function main() {
   try {
@@ -9,6 +22,12 @@ import { layers } from './config';
     // ignore if folder doesn't exist
   }
   fs.mkdirSync('output');
-  const data = await startCreating(layers);
-  fs.writeFileSync('./output/_metadata.json', JSON.stringify(data));
+  const data = await generate(
+    CONFIG.totalTokens,
+    CONFIG.imageBaseUrl
+  );
+  fs.writeFileSync('./output/metadata.json', JSON.stringify(data));
+
+  // const result = createDna([]);
+  // console.log({ result, traits: result.pickedTraits });
 })();

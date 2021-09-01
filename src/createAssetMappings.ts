@@ -8,9 +8,10 @@ import fs from 'fs';
     withFileTypes: true,
   })
     .filter((d) => d.isDirectory())
-    .map((directory) => {
+    .map((directory, index) => {
       return {
         gene: directory.name,
+        id: index + 1,
         images: readdirSync(
           path.join(__dirname, `../assets/${directory.name}`)
         ),
@@ -19,19 +20,26 @@ import fs from 'fs';
     .map((geneData) => {
       const geneName = formatName(geneData.gene.split('_')[0]);
       const geneOrder = Number(geneData.gene.split('_')[1]);
-      const imageObj = geneData.images.map((imageInfo) =>
-        extractTraitInfo(imageInfo)
-      );
-      return { geneName, geneOrder, traits: imageObj };
+      const traits = geneData.images.map((imageInfo, index) => ({
+        ...extractTraitInfo(imageInfo, geneData.gene),
+        id: index + 1,
+        gene: geneName
+      }));
+      return {
+        id: geneData.id,
+        name: geneName,
+        order: geneOrder,
+        traits: traits,
+      };
     });
 
   fs.writeFileSync('./genes/genes.json', JSON.stringify(result));
 })();
 
-function extractTraitInfo(imageInfo: string) {
+function extractTraitInfo(imageInfo: string, geneName: string) {
   const name = formatName(imageInfo.split('_')[0]);
   const weight = Number(imageInfo.split('_')[1].slice(0, -4));
-  return { name, weight };
+  return { name, weight, path: `${geneName}/${imageInfo}` };
 }
 
 function formatName(name: string): string {
@@ -41,11 +49,3 @@ function formatName(name: string): string {
     .map((word) => upperFirst(word))
     .join(' ');
 }
-
-// const weight = function (arr) {
-//   return [].concat(
-//     ...arr.map(
-//         (obj) => Array(Math.ceil(obj.weight * 100)
-//         ).fill(obj))
-//   );
-// };

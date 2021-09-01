@@ -1,1 +1,212 @@
-[{"geneName":"Gene A","geneOrder":0,"traits":[{"name":"Awesome Trait","weight":20},{"name":"Cool Face","weight":10},{"name":"Cool Trait","weight":20},{"name":"Final","weight":45},{"name":"Sweet Nose","weight":5}]},{"geneName":"Gene B","geneOrder":1,"traits":[{"name":"Blob","weight":5},{"name":"Fluff","weight":30},{"name":"Skin","weight":25},{"name":"Stuff","weight":30},{"name":"Tat","weight":10}]},{"geneName":"Gene C","geneOrder":2,"traits":[{"name":"Blarg","weight":10},{"name":"Box","weight":29},{"name":"Comp","weight":34},{"name":"Rename","weight":14},{"name":"Screen Stuff","weight":13}]},{"geneName":"Gene D","geneOrder":3,"traits":[{"name":"Traid D1","weight":10},{"name":"Traid D2","weight":10},{"name":"Traid D5","weight":10},{"name":"Trait D3","weight":10},{"name":"Trait D4","weight":60}]},{"geneName":"Gene E","geneOrder":4,"traits":[{"name":"Trait E1","weight":20},{"name":"Trait E2","weight":20},{"name":"Trait E3","weight":20},{"name":"Trait E4","weight":20},{"name":"Trait E5","weight":20}]}]
+[
+  {
+    "id": 1,
+    "name": "Gene A",
+    "order": 0,
+    "traits": [
+      {
+        "name": "Awesome Trait",
+        "weight": 20,
+        "path": "Gene-A_0/awesome-trait_20.png",
+        "id": 1,
+        "gene": "Gene A"
+      },
+      {
+        "name": "Cool Face",
+        "weight": 10,
+        "path": "Gene-A_0/cool-face_10.png",
+        "id": 2,
+        "gene": "Gene A"
+      },
+      {
+        "name": "Cool Trait",
+        "weight": 20,
+        "path": "Gene-A_0/cool-trait_20.png",
+        "id": 3,
+        "gene": "Gene A"
+      },
+      {
+        "name": "Final",
+        "weight": 45,
+        "path": "Gene-A_0/final_45.png",
+        "id": 4,
+        "gene": "Gene A"
+      },
+      {
+        "name": "Sweet Nose",
+        "weight": 5,
+        "path": "Gene-A_0/sweet-nose_5.png",
+        "id": 5,
+        "gene": "Gene A"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Gene B",
+    "order": 1,
+    "traits": [
+      {
+        "name": "Blob",
+        "weight": 5,
+        "path": "Gene-B_1/blob_5.png",
+        "id": 1,
+        "gene": "Gene B"
+      },
+      {
+        "name": "Fluff",
+        "weight": 30,
+        "path": "Gene-B_1/fluff_30.png",
+        "id": 2,
+        "gene": "Gene B"
+      },
+      {
+        "name": "Skin",
+        "weight": 25,
+        "path": "Gene-B_1/skin_25.png",
+        "id": 3,
+        "gene": "Gene B"
+      },
+      {
+        "name": "Stuff",
+        "weight": 30,
+        "path": "Gene-B_1/stuff_30.png",
+        "id": 4,
+        "gene": "Gene B"
+      },
+      {
+        "name": "Tat",
+        "weight": 10,
+        "path": "Gene-B_1/tat_10.png",
+        "id": 5,
+        "gene": "Gene B"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Gene C",
+    "order": 2,
+    "traits": [
+      {
+        "name": "Blarg",
+        "weight": 10,
+        "path": "Gene-C_2/blarg_10.png",
+        "id": 1,
+        "gene": "Gene C"
+      },
+      {
+        "name": "Box",
+        "weight": 29,
+        "path": "Gene-C_2/box_29.png",
+        "id": 2,
+        "gene": "Gene C"
+      },
+      {
+        "name": "Comp",
+        "weight": 34,
+        "path": "Gene-C_2/comp_34.png",
+        "id": 3,
+        "gene": "Gene C"
+      },
+      {
+        "name": "Rename",
+        "weight": 14,
+        "path": "Gene-C_2/rename_14.png",
+        "id": 4,
+        "gene": "Gene C"
+      },
+      {
+        "name": "Screen Stuff",
+        "weight": 13,
+        "path": "Gene-C_2/screen-stuff_13.png",
+        "id": 5,
+        "gene": "Gene C"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Gene D",
+    "order": 3,
+    "traits": [
+      {
+        "name": "Traid D1",
+        "weight": 10,
+        "path": "Gene-D_3/traid-d1_10.png",
+        "id": 1,
+        "gene": "Gene D"
+      },
+      {
+        "name": "Traid D2",
+        "weight": 10,
+        "path": "Gene-D_3/traid-d2_10.png",
+        "id": 2,
+        "gene": "Gene D"
+      },
+      {
+        "name": "Traid D5",
+        "weight": 10,
+        "path": "Gene-D_3/traid-d5_10.png",
+        "id": 3,
+        "gene": "Gene D"
+      },
+      {
+        "name": "Trait D3",
+        "weight": 10,
+        "path": "Gene-D_3/trait-d3_10.png",
+        "id": 4,
+        "gene": "Gene D"
+      },
+      {
+        "name": "Trait D4",
+        "weight": 60,
+        "path": "Gene-D_3/trait-d4_60.png",
+        "id": 5,
+        "gene": "Gene D"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Gene E",
+    "order": 4,
+    "traits": [
+      {
+        "name": "Trait E1",
+        "weight": 20,
+        "path": "Gene-E_4/trait-e1_20.png",
+        "id": 1,
+        "gene": "Gene E"
+      },
+      {
+        "name": "Trait E2",
+        "weight": 20,
+        "path": "Gene-E_4/trait-e2_20.png",
+        "id": 2,
+        "gene": "Gene E"
+      },
+      {
+        "name": "Trait E3",
+        "weight": 20,
+        "path": "Gene-E_4/trait-e3_20.png",
+        "id": 3,
+        "gene": "Gene E"
+      },
+      {
+        "name": "Trait E4",
+        "weight": 20,
+        "path": "Gene-E_4/trait-e4_20.png",
+        "id": 4,
+        "gene": "Gene E"
+      },
+      {
+        "name": "Trait E5",
+        "weight": 20,
+        "path": "Gene-E_4/trait-e5_20.png",
+        "id": 5,
+        "gene": "Gene E"
+      }
+    ]
+  }
+]
